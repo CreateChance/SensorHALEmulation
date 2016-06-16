@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">SensorCollector</string>
+
+    <string name="connection_status_connected">Connected</string>
+    <string name="connection_status_disconnected">Disconnected</string>
+    <string name="no_value_to_show">NULL</string>
+</resources>

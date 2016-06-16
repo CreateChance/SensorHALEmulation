@@ -1,0 +1,90 @@
+// Copyright 2016, ISCAS.
+// All rights reserved.
+
+syntax = "proto2";
+
+option java_package = "cn.ac.iscas.sensorcollector";
+option java_outer_classname = "SenserServiceProto";
+
+package SensorService;
+
+////////////////////////////////////MESSAGE DEFINE/////////////////////////////////////////
+// message defines here.
+// client register a sensor listener.
+message RegisterListener {
+    enum RegisterType {
+        STREAM = 0;
+        TRIGGER = 1;
+    }
+
+    required RegisterType type = 1;
+    required int32 sensorHandle = 2;
+    optional int32 samplingPeriodUs = 3;
+    optional int32 maxReportLatencyUs = 4;
+}
+// client unregister a sensor listener.
+message UnregisterListener {
+    // default -1 means unregister all sensors.
+    required int32 sensorHandle = 1;
+}
+
+// server's sensor description.
+message Sensor {
+    required string name = 1;
+    required string vendor = 2;
+    required int32 version = 3;
+    required int32 handle = 4;
+    required int32 type = 5;
+    required float maxRange = 6;
+    required float resolution = 7;
+    required float power = 8;
+    required int32 minDelay = 9;
+    required uint32 fifoReservedEventCount = 10;
+    required uint32 fifoMaxEventCount = 11;
+    required string stringType = 12;
+    required string requiredPermission = 13;
+    required uint32 maxDelay = 14;
+    required uint32 flags = 15;
+}
+
+// server's sensor data event.
+message SensorDataEvent {
+    required int32 accuracy = 1;
+    required int32 sensorHandle = 2;
+    required int64 timestamp = 3;
+    required float xvalue = 4;
+    optional float yvalue = 5;
+    optional float zvalue = 6;
+}
+
+// sever's sensor accuracy event.
+message SensorAccuracyEvent {
+    required int32 sensorHandle = 1;
+    required int32 accuracy = 2;
+}
+
+// Request and Response
+message Request {
+    enum RequestType {
+        REGISTER = 0;
+        UNREGISTER = 1;
+        GET_SENSOR_LIST = 2;
+    }
+
+    required RequestType reqType = 1;
+    optional RegisterListener regListener = 2;
+    optional UnregisterListener unRegListener = 3;
+}
+
+message Response {
+    enum ResponseType {
+        SENSOR_LIST = 0;
+        SENSOR_DATA = 1;
+        SENSOR_ACCURACY = 2;
+    }
+
+    required ResponseType rspType = 1;
+    repeated Sensor sensors = 2;
+    optional SensorDataEvent sensorData = 3;
+    optional SensorAccuracyEvent sensorAccuracy = 4;
+}
